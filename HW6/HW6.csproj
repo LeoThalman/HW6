@@ -147,6 +147,7 @@
     <Compile Include="Models\WorkOrder.cs" />
     <Compile Include="Models\WorkOrderRouting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\AdventureWorksViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -158,6 +159,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Production\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Production\ProductList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
