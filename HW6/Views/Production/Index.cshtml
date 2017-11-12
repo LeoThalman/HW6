@@ -1,0 +1,12 @@
+﻿
+@model IEnumerable<HW6.Models.ProductCategory>
+
+<h2>@ViewBag.Title</h2>
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>@Html.ActionLink(item.Name, "Index", "Production")</li>
+    }
+
+</ul>
+
