@@ -6,10 +6,10 @@
         <li> @Html.ActionLink( (string)ProductItem.Name,"ProductPage", new { PID = ProductItem.ProductID}, null) </li>
     }
 </ul>
-<ul>
+<ul class="navbar">
     @if(ViewBag.Prev >= 1) 
-    {<li> @Html.ActionLink("Previous", "ProductList", "Production", new { SubId = ViewBag.SubId, PageNumber = ViewBag.Prev }, null) </li>}
+    { @Html.ActionLink("Previous", "ProductList", "Production", new { SubId = ViewBag.SubId, PageNumber = ViewBag.Prev }, new { @class = "btn btn-primary btn-large" }) }
     @if (ViewBag.Next <= ViewBag.Last)
-    { <li> @Html.ActionLink("Next", "ProductList", "Production", new { SubId = ViewBag.SubId, PageNumber = ViewBag.Next }, null) </li>}
-    </ul>
+    { @Html.ActionLink("Next", "ProductList", "Production",new { SubId = ViewBag.SubId, PageNumber = ViewBag.Next }, new { @class = "btn btn-primary btn-large" }) }
+</ul>
 
