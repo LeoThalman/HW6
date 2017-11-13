@@ -41,6 +41,10 @@ namespace HW6.Controllers
                 temp = Math.Ceiling(temp);
                 int last = (int)temp;
                 int skip = num - 1;
+                ViewBag.Prev = PageNumber -1;
+                ViewBag.Next = PageNumber + 1;
+                ViewBag.Last = last;
+                ViewBag.SubId = Id;
                 skip = skip * 6;
                 ViewModel.ItemCat = db.ProductCategories.ToList();
                 ViewModel.ItemSubCat = db.ProductSubcategories.ToList();
