@@ -65,5 +65,14 @@ namespace HW6.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public ActionResult ProductPage(int? PID)
+        {
+                ViewModel.ItemCat = db.ProductCategories.ToList();
+                ViewModel.ItemSubCat = db.ProductSubcategories.ToList();
+                ViewModel.PItem = db.Products.Where(p => p.ProductID == PID).FirstOrDefault();
+                return View(ViewModel);
+
+        }
     }
 }

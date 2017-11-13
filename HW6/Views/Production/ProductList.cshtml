@@ -1,9 +1,9 @@
 ﻿
 <h2>ProductList</h2>
 <ul>
-    @foreach (var temp in Model.ItemList)
+    @foreach (var ProductItem in Model.ItemList)
     {
-        <li> @temp.Name </li>
+        <li> @Html.ActionLink( (string)ProductItem.Name,"ProductPage", new { PID = ProductItem.ProductID}, null) </li>
     }
 </ul>
 

@@ -11,5 +11,6 @@ namespace HW6.ViewModel
         public IEnumerable<ProductCategory> ItemCat { get; set; }
         public IEnumerable<ProductSubcategory> ItemSubCat { get; set; }
         public IEnumerable<Product> ItemList { get; set; }
+        public Product PItem { get; set; }
     }
 }
