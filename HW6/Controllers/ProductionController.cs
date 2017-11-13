@@ -21,7 +21,6 @@ namespace HW6.Controllers
         {
             ViewModel.ItemCat = db.ProductCategories.ToList();
             ViewModel.ItemSubCat = db.ProductSubcategories.ToList();
-            ViewBag.Title = "Home";
             return View(ViewModel);
         }
         public ActionResult ProductList(int? SubId, int? PageNumber)
@@ -36,6 +35,9 @@ namespace HW6.Controllers
                 int Id = (int)SubId;
                 int num = (int)PageNumber;
                 int count = db.Products.Where(p => Id == p.ProductSubcategoryID).Count();
+                ViewBag.Title = db.ProductSubcategories.Where(p => Id == p.ProductSubcategoryID)
+                                   .Select(p => p.Name)
+                                   .FirstOrDefault();
                 decimal temp = count;
                 temp = temp / 6;
                 temp = Math.Ceiling(temp);
