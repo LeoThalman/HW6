@@ -24,29 +24,46 @@ namespace HW6.Controllers
             ViewBag.Title = "Home";
             return View(ViewModel);
         }
-        public ActionResult ProductList(int? SubId)
+        public ActionResult ProductList(int? SubId, int? PageNumber)
         {
-            if(SubId.HasValue == false)
+            if(SubId.HasValue == false || PageNumber.HasValue == false)
             {
-                RedirectToAction("index");
+                return RedirectToAction("Index");
             }
-            Console.WriteLine(SubId);
+
             try
             {
                 int Id = (int)SubId;
+                int num = (int)PageNumber;
+                int count = db.Products.Where(p => Id == p.ProductSubcategoryID).Count();
+                decimal temp = count;
+                temp = temp / 6;
+                temp = Math.Ceiling(temp);
+                int last = (int)temp;
+                int skip = num - 1;
+                skip = skip * 6;
                 ViewModel.ItemCat = db.ProductCategories.ToList();
                 ViewModel.ItemSubCat = db.ProductSubcategories.ToList();
-                ViewModel.ItemList = db.Products.Where(p => Id == p.ProductSubcategoryID )
-                                              .ToList();
-                return View(ViewModel);
+                if (num <= last)
+                {
+                    ViewModel.ItemList = db.Products.Where(p => Id == p.ProductSubcategoryID)
+                                                  .OrderBy(p => p.ProductID)
+                                                  .Skip(skip)
+                                                  .Take(6)
+                                                  .ToList();
+                    return View(ViewModel);
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
             }
             catch(Exception E)
             {
                 Console.WriteLine(E);
             }
 
-            RedirectToAction("index");
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }

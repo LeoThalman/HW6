@@ -31,7 +31,8 @@
                                 @foreach (var subitem in Model.ItemSubCat)
                                 {
                                     if (subitem.ProductCategoryID == item.ProductCategoryID)
-                                    { <li>@Html.ActionLink(subitem.Name, "ProductList", "Production", new { SubId = subitem.ProductSubcategoryID }, null)</li> }
+                                    { <li>@Html.ActionLink(subitem.Name, "ProductList", "Production", new {
+                                           SubId = subitem.ProductSubcategoryID, PageNumber = 1}, null)</li> }
                 }
                             </ul>
                         </li>
