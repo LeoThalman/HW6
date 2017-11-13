@@ -14,18 +14,38 @@ namespace HW6.Controllers
     public class ProductionController : Controller
     {
         private ProductionContext db = new ProductionContext();
-        private AdventureWorksViewModel Menu = new AdventureWorksViewModel();
+        private AdventureWorksViewModel ViewModel = new AdventureWorksViewModel();
+
         // GET: Production
         public ActionResult Index()
         {
-
-            Menu.ItemCat = db.ProductCategories.ToList();
-            Menu.ItemSubCat = db.ProductSubcategories.ToList();
+            ViewModel.ItemCat = db.ProductCategories.ToList();
+            ViewModel.ItemSubCat = db.ProductSubcategories.ToList();
             ViewBag.Title = "Home";
-            return View(Menu);
+            return View(ViewModel);
         }
-        public ActionResult ProductList()
+        public ActionResult ProductList(int? SubId)
         {
+            if(SubId.HasValue == false)
+            {
+                RedirectToAction("index");
+            }
+            Console.WriteLine(SubId);
+            try
+            {
+                int Id = (int)SubId;
+                ViewModel.ItemCat = db.ProductCategories.ToList();
+                ViewModel.ItemSubCat = db.ProductSubcategories.ToList();
+                ViewModel.ItemList = db.Products.Where(p => Id == p.ProductSubcategoryID )
+                                              .ToList();
+                return View(ViewModel);
+            }
+            catch(Exception E)
+            {
+                Console.WriteLine(E);
+            }
+
+            RedirectToAction("index");
             return View();
         }
     }

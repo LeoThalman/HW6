@@ -1,7 +1,9 @@
 ﻿
-@{
-    ViewBag.Title = "ProductList";
-}
-
 <h2>ProductList</h2>
+<ul>
+    @foreach (var temp in Model.ItemList)
+    {
+        <li> @temp.Name </li>
+    }
+</ul>
 
