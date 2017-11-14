@@ -14,18 +14,20 @@ namespace HW6.Models
         public int ProductID { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(50, ErrorMessage = "Name must be entered, and less than 50 characters")]
         public string ReviewerName { get; set; }
 
         public DateTime ReviewDate { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(50, ErrorMessage ="Email must be entered, and less than 50 characters")]
         public string EmailAddress { get; set; }
 
+        [Required]
+        [Range(0,5, ErrorMessage ="Rating must be entered, and between 0-5")]
         public int Rating { get; set; }
 
-        [StringLength(3850)]
+        [StringLength(3850, ErrorMessage ="Comment must be less than 3850 characters")]
         public string Comments { get; set; }
 
         public DateTime ModifiedDate { get; set; }

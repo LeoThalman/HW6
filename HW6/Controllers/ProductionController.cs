@@ -13,19 +13,26 @@ namespace HW6.Controllers
     
     public class ProductionController : Controller
     {
-        private ProductionContext db = new ProductionContext();
-        private AdventureWorksViewModel ViewModel = new AdventureWorksViewModel();
+        private AdventureWorksViewModel ViewModel = new AdventureWorksViewModel()
+        {
+            Db = new ProductionContext()
+        };
+
 
         // GET: Production
         public ActionResult Index()
         {
-            ViewModel.ItemCat = db.ProductCategories.ToList();
-            ViewModel.ItemSubCat = db.ProductSubcategories.ToList();
+            ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
+            ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
             return View(ViewModel);
         }
+
+
         public ActionResult ProductList(int? SubId, int? PageNumber)
         {
-            if(SubId.HasValue == false || PageNumber.HasValue == false)
+            ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
+            ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
+            if (SubId.HasValue == false || PageNumber.HasValue == false)
             {
                 return RedirectToAction("Index");
             }
@@ -34,10 +41,12 @@ namespace HW6.Controllers
             {
                 int Id = (int)SubId;
                 int num = (int)PageNumber;
-                int count = db.Products.Where(p => Id == p.ProductSubcategoryID).Count();
-                ViewBag.Title = db.ProductSubcategories.Where(p => Id == p.ProductSubcategoryID)
+                int count = ViewModel.Db.Products.Where(p => Id == p.ProductSubcategoryID).Count();
+                ViewBag.Title = ViewModel.Db.ProductSubcategories
+                                   .Where(p => Id == p.ProductSubcategoryID)
                                    .Select(p => p.Name)
                                    .FirstOrDefault();
+
                 decimal temp = count;
                 temp = temp / 6;
                 temp = Math.Ceiling(temp);
@@ -48,15 +57,15 @@ namespace HW6.Controllers
                 ViewBag.Last = last;
                 ViewBag.SubId = Id;
                 skip = skip * 6;
-                ViewModel.ItemCat = db.ProductCategories.ToList();
-                ViewModel.ItemSubCat = db.ProductSubcategories.ToList();
                 if (num <= last)
                 {
-                    ViewModel.ItemList = db.Products.Where(p => Id == p.ProductSubcategoryID)
+                    ViewModel.ItemList = ViewModel.Db.Products
+                                                  .Where(p => Id == p.ProductSubcategoryID)
                                                   .OrderBy(p => p.ProductID)
                                                   .Skip(skip)
                                                   .Take(6)
                                                   .ToList();
+                    
                     return View(ViewModel);
                 }
                 else
@@ -74,11 +83,58 @@ namespace HW6.Controllers
 
         public ActionResult ProductPage(int? PID)
         {
-                ViewModel.ItemCat = db.ProductCategories.ToList();
-                ViewModel.ItemSubCat = db.ProductSubcategories.ToList();
-                ViewModel.PItem = db.Products.Where(p => p.ProductID == PID).FirstOrDefault();
+                ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
+                ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
+                ViewModel.PItem = ViewModel.Db.Products.Where(p => p.ProductID == PID).FirstOrDefault();
                 return View(ViewModel);
 
+        }
+
+
+        [HttpGet]
+        public ActionResult AddReview(int? PID)
+        {
+            ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
+            ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
+            ViewBag.Title = "Add Review for " + ViewModel.Db.Products.Where(p => p.ProductID == PID)
+                                                           .Select(p => p.Name)
+                                                           .FirstOrDefault();
+            return View(ViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddReview(int? PID, [Bind(Include = "ProductReviewID,ProductID, ReviewerName,ReviewDate," +
+                                      "EmailAddress,Rating,Comments,ModifiedDate")] ProductReview review)
+        {
+            ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
+            ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
+            ViewBag.Title = "Add Review for " + ViewModel.Db.Products.Where(p => p.ProductID == PID)
+                                               .Select(p => p.Name)
+                                               .FirstOrDefault();
+            if(ModelState.IsValid)
+            { 
+                int Id = (int)PID;
+                review.ProductID = Id;
+                review.ReviewDate = DateTime.Now;
+                review.ModifiedDate = DateTime.Now;
+                ViewModel.Db.ProductReviews.Add(review);
+                ViewModel.Db.SaveChanges();
+                return RedirectToAction("ThankYou", new { PID = Id, Name = review.ReviewerName });
+            }
+
+            return View(ViewModel);
+
+        }
+
+        public ActionResult ThankYou(int PID, string Name)
+        {
+            ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
+            ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
+            ViewBag.Message = "Thank you " + Name + "for your review of " + ViewModel.Db.Products
+                                                                          .Where(p => p.ProductID == PID)
+                                                                          .Select(p=> p.Name).FirstOrDefault();
+            return View(ViewModel);
         }
     }
 }
