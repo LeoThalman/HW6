@@ -1,12 +1,16 @@
 ﻿
 <h2>@ViewBag.Title</h2>
-<ul>
+
     @foreach (var ProductItem in Model.ItemList)
     {
-        <li>@Html.ActionLink( (string)ProductItem.Name,"ProductPage", new { PID = ProductItem.ProductID}, null) </li>
-        <li><img src="data:image;base64,@System.Convert.ToBase64String(Model.ItemThumbNail[ProductItem.ProductID])" /></li>
+        <div class="card">
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.ItemThumbNail[ProductItem.ProductID])" alt="@ProductItem.Name" />
+            <h4>@ProductItem.Name</h4>
+            <p>@Html.ActionLink("Details", "ProductPage", new { PID = ProductItem.ProductID }, null) </p>
+            
+        </div>
     }
-</ul>
+
 <ul class="navbar">
     @if(ViewBag.Prev >= 1) 
     { @Html.ActionLink("Previous", "ProductList", "Production", new { SubId = ViewBag.SubId, PageNumber = ViewBag.Prev }, new { @class = "btn btn-primary btn-large" }) }
