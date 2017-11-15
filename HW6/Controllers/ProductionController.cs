@@ -8,9 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace HW6.Controllers
-{
-
-    
+{    
     public class ProductionController : Controller
     {
         private AdventureWorksViewModel ViewModel = new AdventureWorksViewModel()
@@ -22,6 +20,7 @@ namespace HW6.Controllers
         // GET: Production
         public ActionResult Index()
         {
+            ViewBag.Title = "Index Page";
             ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
             ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
             return View(ViewModel);
@@ -30,6 +29,7 @@ namespace HW6.Controllers
 
         public ActionResult ProductList(int? SubId, int? PageNumber)
         {
+            ViewBag.Title = "Product Page";
             ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
             ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
             if (SubId.HasValue == false || PageNumber.HasValue == false)
@@ -37,48 +37,64 @@ namespace HW6.Controllers
                 return RedirectToAction("Index");
             }
 
-            try
-            {
-                int Id = (int)SubId;
-                int num = (int)PageNumber;
-                int count = ViewModel.Db.Products.Where(p => Id == p.ProductSubcategoryID).Count();
-                ViewBag.Title = ViewModel.Db.ProductSubcategories
-                                   .Where(p => Id == p.ProductSubcategoryID)
-                                   .Select(p => p.Name)
-                                   .FirstOrDefault();
+            int Id = (int)SubId;
+            int num = (int)PageNumber;
+            int count = ViewModel.Db.Products.Where(p => Id == p.ProductSubcategoryID).Count();
+            ViewBag.Title = ViewModel.Db.ProductSubcategories
+                                .Where(p => Id == p.ProductSubcategoryID)
+                                .Select(p => p.Name)
+                                .FirstOrDefault();
 
-                decimal temp = count;
-                temp = temp / 6;
-                temp = Math.Ceiling(temp);
-                int last = (int)temp;
-                int skip = num - 1;
-                ViewBag.Prev = PageNumber -1;
-                ViewBag.Next = PageNumber + 1;
-                ViewBag.Last = last;
-                ViewBag.SubId = Id;
-                skip = skip * 6;
-                if (num <= last)
-                {
-                    ViewModel.ItemList = ViewModel.Db.Products
-                                                  .Where(p => Id == p.ProductSubcategoryID)
-                                                  .OrderBy(p => p.ProductID)
-                                                  .Skip(skip)
-                                                  .Take(6)
-                                                  .ToList();
-                    
-                    return View(ViewModel);
-                }
-                else
-                {
-                    return RedirectToAction("Index");
-                }
-            }
-            catch(Exception E)
+            decimal temp = count;
+            temp = temp / 6;
+            temp = Math.Ceiling(temp);
+            int last = (int)temp;
+            int skip = num - 1;
+            ViewBag.Prev = PageNumber -1;
+            ViewBag.Next = PageNumber + 1;
+            ViewBag.Last = last;
+            ViewBag.SubId = Id;
+            skip = skip * 6;
+            if (num <= last)
             {
-                Console.WriteLine(E);
-            }
+                ViewModel.ItemList = ViewModel.Db.Products
+                                                .Where(p => Id == p.ProductSubcategoryID)
+                                                .OrderBy(p => p.ProductID)
+                                                .Skip(skip)
+                                                .Take(6)
+                                                .AsEnumerable();
+                IEnumerable<ProductPhoto> Photos = ViewModel.Db.ProductPhotoes.AsEnumerable();
+                var PhotoIDs = ViewModel.Db.ProductProductPhotoes.Join(ViewModel.ItemList,
+                                                            item => item.ProductID,
+                                                            id => id.ProductID, (id, item) =>
+                                                            new { ProductPhotoID = id.ProductPhotoID, ProductID = id.ProductID }).AsEnumerable();
+                var tempPhotos = Photos.Join(PhotoIDs,
+                                            id => id.ProductPhotoID,
+                                            photo => photo.ProductPhotoID,
+                                            (photo, id) => new {
+                                                ProductPhotoID = photo.ProductPhotoID,
+                                                ThumbNailPhoto = photo.ThumbNailPhoto,
+                                                ThumbNailPhotoFileName = photo.ThumbnailPhotoFileName,
+                                                LargePhoto = photo.LargePhoto,
+                                                LargePhotoFileName = photo.LargePhotoFileName,
+                                                ProductID = id.ProductID
+                                            })
+                                            .OrderBy(p => p.ProductID).ToList();
+                ViewModel.ItemThumbNail = new Dictionary<int, byte[]>();
+                ViewModel.ItemLargePhoto = new Dictionary<int, byte[]>();
+                foreach (var tPhoto in tempPhotos)
+                {
+                    ViewModel.ItemThumbNail.Add(tPhoto.ProductID, tPhoto.ThumbNailPhoto);
+                    ViewModel.ItemLargePhoto.Add(tPhoto.ProductID, tPhoto.LargePhoto);
+                }
 
-            return RedirectToAction("Index");
+                ViewModel.ItemList = ViewModel.ItemList.ToList();
+                return View(ViewModel);
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         public ActionResult ProductPage(int? PID)

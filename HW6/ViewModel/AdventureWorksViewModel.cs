@@ -11,7 +11,8 @@ namespace HW6.ViewModel
     {
         public ProductReview Review { get; set; }
         public ProductionContext Db { get; set; }
-        public IEnumerable<ProductPhoto> ItemPhoto { get; set; }
+        public Dictionary<int, byte[]> ItemThumbNail { get; set; }
+        public Dictionary<int, byte[]> ItemLargePhoto {get; set; }
         public IEnumerable<ProductCategory> ItemCat { get; set; }
         public IEnumerable<ProductSubcategory> ItemSubCat { get; set; }
         public IEnumerable<Product> ItemList { get; set; }
