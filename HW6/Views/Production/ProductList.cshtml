@@ -1,15 +1,16 @@
 ﻿
 <h2>@ViewBag.Title</h2>
-
+<div class="card-wrapper">
     @foreach (var ProductItem in Model.ItemList)
     {
         <div class="card">
             <img src="data:image;base64,@System.Convert.ToBase64String(Model.ItemThumbNail[ProductItem.ProductID])" alt="@ProductItem.Name" />
             <h4>@ProductItem.Name</h4>
             <p>@Html.ActionLink("Details", "ProductPage", new { PID = ProductItem.ProductID }, null) </p>
-            
+
         </div>
     }
+</div>
 
 <ul class="navbar">
     @if(ViewBag.Prev >= 1) 
