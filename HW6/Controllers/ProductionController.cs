@@ -63,6 +63,11 @@ namespace HW6.Controllers
                                                 .Skip(skip)
                                                 .Take(6)
                                                 .AsEnumerable();
+                ViewModel.ItemCost = new Dictionary<int, decimal>();
+                foreach (var i in ViewModel.ItemList)
+                {
+                    ViewModel.ItemCost.Add(i.ProductID, decimal.Round(i.ListPrice, 2));                    
+                }
                 IEnumerable<ProductPhoto> Photos = ViewModel.Db.ProductPhotoes.AsEnumerable();
                 var PhotoIDs = ViewModel.Db.ProductProductPhotoes.Join(ViewModel.ItemList,
                                                             item => item.ProductID,
@@ -81,11 +86,9 @@ namespace HW6.Controllers
                                             })
                                             .OrderBy(p => p.ProductID).ToList();
                 ViewModel.ItemThumbNail = new Dictionary<int, byte[]>();
-                ViewModel.ItemLargePhoto = new Dictionary<int, byte[]>();
                 foreach (var tPhoto in tempPhotos)
                 {
                     ViewModel.ItemThumbNail.Add(tPhoto.ProductID, tPhoto.ThumbNailPhoto);
-                    ViewModel.ItemLargePhoto.Add(tPhoto.ProductID, tPhoto.LargePhoto);
                 }
 
                 ViewModel.ItemList = ViewModel.ItemList.ToList();
@@ -99,10 +102,29 @@ namespace HW6.Controllers
 
         public ActionResult ProductPage(int? PID)
         {
-                ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
-                ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
-                ViewModel.PItem = ViewModel.Db.Products.Where(p => p.ProductID == PID).FirstOrDefault();
-                return View(ViewModel);
+                
+            int Id = (int)PID;
+            ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
+            ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
+            ViewModel.PItem = ViewModel.Db.Products.Where(p => p.ProductID == PID).FirstOrDefault();
+            ViewModel.ItemCost = new Dictionary<int, decimal>
+            {
+                { ViewModel.PItem.ProductID, decimal.Round(ViewModel.PItem.ListPrice, 2) }
+            };
+
+            var PMID = ViewModel.PItem.ProductModelID;
+            ProductModelProductDescriptionCulture DesID = ViewModel.Db.ProductModelProductDescriptionCultures.Where(d => d.ProductModelID == PMID).FirstOrDefault();
+            ViewModel.Desc = ViewModel.Db.ProductDescriptions.Where(d=> d.ProductDescriptionID == DesID.ProductDescriptionID).FirstOrDefault();
+
+            ProductProductPhoto PhotoID = ViewModel.Db.ProductProductPhotoes
+                                                   .Where(p => p.ProductID == Id)
+                                                   .FirstOrDefault();
+            ProductPhoto tPhoto = ViewModel.Db.ProductPhotoes
+                                           .Where(p => p.ProductPhotoID == PhotoID.ProductPhotoID)
+                                           .FirstOrDefault();
+            ViewModel.ItemReviews = ViewModel.Db.ProductReviews.Where(r => r.ProductID == Id);
+            ViewModel.ItemLargePhoto = (tPhoto.LargePhoto);
+            return View(ViewModel);
 
         }
 

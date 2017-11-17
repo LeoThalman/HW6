@@ -16,7 +16,7 @@ namespace HW6
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Production", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

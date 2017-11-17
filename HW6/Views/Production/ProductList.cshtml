@@ -7,7 +7,7 @@
             <img src="data:image;base64,@System.Convert.ToBase64String(Model.ItemThumbNail[ProductItem.ProductID])" alt="@ProductItem.Name" />
             <h4>@ProductItem.Name</h4>
             <p>@Html.ActionLink("Details", "ProductPage", new { PID = ProductItem.ProductID }, null) </p>
-
+            <p>Cost: $@Model.ItemCost[ProductItem.ProductID]</p>
         </div>
     }
 </div>
