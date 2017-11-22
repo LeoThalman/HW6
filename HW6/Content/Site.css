@@ -10,8 +10,10 @@
     padding-bottom: 15px;
     width: 30%;
     float:left;
+}
 
-
+.nav {
+    color:white;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -19,6 +21,7 @@
     padding-left: 15px;
     padding-right: 15px;
 }
+
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
@@ -28,8 +31,7 @@ textarea {
 }
 
 .dropdown-menu li {
-    float: left;
-    padding: 15px 15px;
+    padding-bottom: 5px;
     font-size: 18px;
     line-height: 20px;
 }

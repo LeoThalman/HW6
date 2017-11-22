@@ -20,7 +20,8 @@ namespace HW6.Controllers
         // GET: Production
         public ActionResult Index()
         {
-            ViewBag.Title = "Index Page";
+            ViewBag.Title = "Adventure Works";
+            ViewBag.Message = "Welcome to the Adventure Works website. You can use the navigation bar above you view different items.";
             ViewModel.ItemCat = ViewModel.Db.ProductCategories.ToList();
             ViewModel.ItemSubCat = ViewModel.Db.ProductSubcategories.ToList();
             return View(ViewModel);
