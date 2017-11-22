@@ -24,6 +24,7 @@ namespace HW6.Models
         public string EmailAddress { get; set; }
 
         [Required]
+        [Display (Name = "Rating (out of 5)")]
         [Range(0,5, ErrorMessage ="Rating must be entered, and between 0-5")]
         public int Rating { get; set; }
 

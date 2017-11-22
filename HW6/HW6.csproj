@@ -163,6 +163,7 @@
     <Content Include="Views\Production\ProductPage.cshtml" />
     <Content Include="Views\Production\AddReview.cshtml" />
     <Content Include="Views\Production\ThankYou.cshtml" />
+    <Content Include="Views\Production\ErrorPage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

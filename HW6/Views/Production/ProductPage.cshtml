@@ -1,19 +1,25 @@
 ﻿<div class="card-wrapper">
     <div class="card">
+            @*item name*@
         <h2>@Model.PItem.Name</h2>
+        @*take byte array of item photo and display, if none display item name*@
         <img src="data:image;base64,@System.Convert.ToBase64String(Model.ItemLargePhoto)" alt="@Model.PItem.Name" />
+                  @*item cost*@
         <p>Cost: $@Model.ItemCost[Model.PItem.ProductID]</p>
+           @*description of item*@
         <p>@Model.Desc.Description</p>
+        @*loop through reviews and display information for each*@
         @foreach (var rev in Model.ItemReviews)
         {
             <p><strong>Review By:</strong> @rev.ReviewerName</p>
-            <p><strong>Rating:</strong> @rev.Rating</p>
+            <p><strong>Rating (out of 5):</strong> @rev.Rating</p>
             <p><strong>Review:</strong> @rev.Comments</p>
             <p><strong>Review Date:</strong> @rev.ReviewDate</p>
             <br />
         }
     </div>
 </div>
+       @*link to add reviews*@
     <p>@Html.ActionLink("Add Review", "AddReview", new { PID = Model.PItem.ProductID })</p>
 
  

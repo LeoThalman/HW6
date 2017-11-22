@@ -1,20 +1,27 @@
 ﻿
 <h2>@ViewBag.Title</h2>
 <div class="card-wrapper">
+    @*add a card for each item*@
     @foreach (var ProductItem in Model.ItemList)
     {
         <div class="card">
+            @*thumbnail image of item*@
             <img src="data:image;base64,@System.Convert.ToBase64String(Model.ItemThumbNail[ProductItem.ProductID])" alt="@ProductItem.Name" />
+            @*item name*@
             <h4>@ProductItem.Name</h4>
+            @*link to more details about item*@
             <p>@Html.ActionLink("Details", "ProductPage", new { PID = ProductItem.ProductID }, null) </p>
+            @*cost of item*@
             <p>Cost: $@Model.ItemCost[ProductItem.ProductID]</p>
         </div>
     }
 </div>
 
 <ul class="navbar">
+    @*Link to previous page, if exists*@
     @if(ViewBag.Prev >= 1) 
     { @Html.ActionLink("Previous", "ProductList", "Production", new { SubId = ViewBag.SubId, PageNumber = ViewBag.Prev }, new { @class = "btn btn-primary btn-large" }) }
+    @*link to next page, if exists*@
     @if (ViewBag.Next <= ViewBag.Last)
     { @Html.ActionLink("Next", "ProductList", "Production",new { SubId = ViewBag.SubId, PageNumber = ViewBag.Next }, new { @class = "btn btn-primary btn-large" }) }
 </ul>

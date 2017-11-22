@@ -24,11 +24,13 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    @*add a dropdown link for each product category*@
                     @foreach (var item in Model.ItemCat)
                     {
                         <li>
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">@item.Name</a>
                             <ul class="dropdown-menu">
+                                @*add a link to product list page for each product subcategory*@
                                 @foreach (var subitem in Model.ItemSubCat)
                                 {
                                     if (subitem.ProductCategoryID == item.ProductCategoryID)
